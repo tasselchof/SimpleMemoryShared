@@ -28,7 +28,7 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface,
             ),
         );
     }
-    
+
     public function getControllerPluginConfig()
     {
         return array(
@@ -53,6 +53,7 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface,
             'factories' => array(
                 'MemorySharedManager' => function($sm) {
                     $memorySharedManager = new MemorySharedManager();
+                    $config = $sm->get('Config');
                     if(isset($config['simple_memory_shared']['default_storage'])) {
                         $defaultStorage = $config['simple_memory_shared']['default_storage'];
                         $pluginManager = $memorySharedManager->getStoragePluginManager();
