@@ -1,17 +1,21 @@
 <?php
 
+/**
+ * sudo memcached -d -u nobody -m 128 127.0.0.1 -p 11211 // to run memcached for tests
+ */
+
 namespace SimpleMemorySharedTest\Storage;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use SimpleMemoryShared\Storage;
 
-class ApcTest extends TestCase
+class SessionTest extends TestCase
 {
     protected $storage;
 
     public function setUp()
     {
-        $this->storage = new Storage\Apc();
+        $this->storage = new Storage\Session();
     }
 
     public function testCanWriteAndRead()
