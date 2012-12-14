@@ -56,6 +56,17 @@ class Memcached implements CapacityStorageInterface
     }
 
     /**
+     * Test if has datas with $uid key
+     * @param mixed $uid
+     * @return boolean
+     */
+    public function has($uid)
+    {
+        $data = $this->read($uid);
+        return false !== $data;
+    }
+
+    /**
      * Read datas with $uid key
      * @param mixed $uid
      * @return mixed
@@ -78,6 +89,20 @@ class Memcached implements CapacityStorageInterface
     }
 
     /**
+     * Clear datas with $uid key
+     * @param mixed $uid
+     * @return void
+     */
+    public function clear($uid = null)
+    {
+        $this->alloc();
+        if($uid) {
+            return $this->memcached->delete($uid);
+        }
+        return $this->memcached->flush();
+    }
+
+    /**
      * Close segment
      * @param int
      */
@@ -86,7 +111,6 @@ class Memcached implements CapacityStorageInterface
         if(null === $this->memcached) {
             return;
         }
-        $this->memcached->flush();
         $this->memcached->close();
     }
 

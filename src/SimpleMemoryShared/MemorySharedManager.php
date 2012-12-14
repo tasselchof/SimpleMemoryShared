@@ -35,6 +35,14 @@ class MemorySharedManager implements Storage\StorageInterface
     /**
      * Proxy storage interface
      */
+    public function has($uid)
+    {
+        return $this->getStorage()->has($uid);
+    }
+
+    /**
+     * Proxy storage interface
+     */
     public function read($uid)
     {
         return $this->getStorage()->read($uid);
@@ -46,6 +54,14 @@ class MemorySharedManager implements Storage\StorageInterface
     public function write($uid, $mixed)
     {
         return $this->getStorage()->write($uid, $mixed);
+    }
+
+    /**
+     * Proxy storage interface
+     */
+    public function clear($uid = null)
+    {
+        return $this->getStorage()->clear($uid);
     }
 
     /**

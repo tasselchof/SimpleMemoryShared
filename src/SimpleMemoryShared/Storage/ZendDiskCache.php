@@ -36,6 +36,17 @@ class ZendDiskCache implements CapacityStorageInterface
     }
 
     /**
+     * Test if has datas with $uid key
+     * @param mixed $uid
+     * @return boolean
+     */
+    public function has($uid)
+    {
+        $data = $this->read($uid);
+        return false !== $data;
+    }
+
+    /**
      * Read datas with $uid key
      * @param mixed $uid
      * @return mixed
@@ -55,6 +66,20 @@ class ZendDiskCache implements CapacityStorageInterface
     {
         $this->alloc();
         return zend_disk_cache_store($uid, $mixed);
+    }
+
+    /**
+     * Clear datas with $uid key
+     * @param mixed $uid
+     * @return void
+     */
+    public function clear($uid = null)
+    {
+        $this->alloc();
+        if($uid) {
+            return zend_disk_cache_delete($uid);
+        }
+        return zend_disk_cache_clear();
     }
 
     /**

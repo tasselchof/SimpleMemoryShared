@@ -30,6 +30,16 @@ class Apc implements CapacityStorageInterface
     }
 
     /**
+     * Test if has datas with $uid key
+     * @param mixed $uid
+     * @return boolean
+     */
+    public function has($uid)
+    {
+        return apc_exists($uid);
+    }
+
+    /**
      * Read datas with $uid key
      * @param mixed $uid
      * @return mixed
@@ -49,6 +59,20 @@ class Apc implements CapacityStorageInterface
     {
         $this->alloc();
         return apc_store($uid, $mixed);
+    }
+
+    /**
+     * Clear datas with $uid key
+     * @param mixed $uid
+     * @return void
+     */
+    public function clear($uid = null)
+    {
+        $this->alloc();
+        if($uid) {
+            return apc_delete($uid);
+        }
+        return apc_clear_cache();
     }
 
     /**

@@ -19,10 +19,11 @@ class StoragePluginManager extends AbstractPluginManager
     protected $invokableClasses = array(
         'apc'           => 'SimpleMemoryShared\Storage\Apc',
         'file'          => 'SimpleMemoryShared\Storage\File',
-        //'distant_file'  => 'SimpleMemoryShared\Storage\DistantFile',
+        //'file_ftp'    => 'SimpleMemoryShared\Storage\FileFtp',
         'memcached'     => 'SimpleMemoryShared\Storage\Memcached',
-        //'redis'         => 'SimpleMemoryShared\Storage\Redis',
+        //'redis'       => 'SimpleMemoryShared\Storage\Redis',
         'segment'       => 'SimpleMemoryShared\Storage\Segment',
+        'bloc'          => 'SimpleMemoryShared\Storage\Bloc',
         'session'       => 'SimpleMemoryShared\Storage\Session',
         'zendshmcache'  => 'SimpleMemoryShared\Storage\ZendShmCache',
         'zendshm'       => 'SimpleMemoryShared\Storage\ZendShmCache',

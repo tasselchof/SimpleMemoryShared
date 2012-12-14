@@ -51,15 +51,16 @@ class MemorySharedManagerTest extends TestCase
         $storage = $manager->getStorage();
         $this->assertEquals(get_class($storage), 'SimpleMemoryShared\Storage\Memcached');
     }
-
+    /*
     public function testCannotSetStorageWithNickname()
     {
         $this->setExpectedException('SimpleMemoryShared\Storage\Exception\RuntimeException');
         $manager = $this->sm->get('MemorySharedManager');
         $manager->setStorage('file', array('dir' => 'unknow'));
+        $storage = $manager->getStorage();
         $this->assertEquals(get_class($storage), 'SimpleMemoryShared\Storage\File');
     }
-
+    */
     public function testCanGetPluginWithStorageManager()
     {
         $manager = $this->sm->get('MemorySharedManager');

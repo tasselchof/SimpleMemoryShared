@@ -7,6 +7,8 @@
 
 namespace SimpleMemoryShared\Storage;
 
+use Zend\Stdlib\Glob;
+
 class File implements CapacityStorageInterface
 {
     /**
@@ -14,12 +16,6 @@ class File implements CapacityStorageInterface
      * @var string
      */
     protected $dir;
-
-    /**
-     * List of files
-     * @var array
-     */
-    protected $files = array();
 
     /**
      *
@@ -48,13 +44,23 @@ class File implements CapacityStorageInterface
     }
 
     /**
+     * Test if has datas with $uid key
+     * @param mixed $uid
+     * @return boolean
+     */
+    public function has($uid)
+    {
+        return file_exists($this->dir. '/'. $uid);
+    }
+
+    /**
      * Read datas with $uid key
      * @param mixed $uid
      * @return mixed
      */
     public function read($uid)
     {
-        if(!file_exists($this->dir. '/'. $uid)) {
+        if(!$this->has($uid)) {
             return false;
         }
         $contents = file_get_contents($this->dir. '/'. $uid);
@@ -74,8 +80,24 @@ class File implements CapacityStorageInterface
         }
         $r = fwrite($fp, serialize($mixed));
         fclose($fp);
-        $this->files[] = $this->dir. '/'. $uid;
         return $r;
+    }
+
+    /**
+     * Clear datas with $uid key
+     * @param mixed $uid
+     * @return void
+     */
+    public function clear($uid = null)
+    {
+        if($uid) {
+            if(!$this->has($uid)) {
+                return false;
+            }
+            return @unlink($this->dir. '/'. $uid);
+        }
+        array_map('unlink', Glob::glob($this->dir. '/*', 0));
+        return true;
     }
 
     /**
@@ -84,9 +106,7 @@ class File implements CapacityStorageInterface
      */
     public function close()
     {
-        foreach($this->files as $file) {
-            @unlink($file);
-        }
+        return;
     }
 
     /**

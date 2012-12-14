@@ -7,11 +7,11 @@
 
 namespace SimpleMemoryShared\Storage;
 
-class Segment implements CapacityStorageInterface
+class Bloc implements CapacityStorageInterface
 {
     /**
      * identifier
-     * @var string
+     * @var resource
      */
     protected $identifier;
 
@@ -26,12 +26,6 @@ class Segment implements CapacityStorageInterface
      * @var int
      */
     protected $segmentSize = 256;
-
-    /**
-     * Bloc size
-     * @var int
-     */
-    protected $blocSize = 8;
 
     /**
      * Construct segment memory
@@ -51,13 +45,10 @@ class Segment implements CapacityStorageInterface
         $this->identifier = $identifier;
     }
 
-    public function realloc($segmentSize, $blocSize = null)
+    public function realloc($segmentSize)
     {
         $this->close();
         $this->setSegmentSize($segmentSize);
-        if($blocSize) {
-            $this->setBlocSize($blocSize);
-        }
     }
 
     /**
@@ -68,7 +59,7 @@ class Segment implements CapacityStorageInterface
         if(null !== $this->memory) {
             return;
         }
-        $this->memory = shmop_open(ftok(__FILE__, $this->identifier), "c", 0644, $this->segmentSize);
+        $this->memory = shm_attach(ftok(__FILE__, $this->identifier), $this->segmentSize, 0644);
     }
 
     /**
@@ -78,8 +69,7 @@ class Segment implements CapacityStorageInterface
      */
     public function has($uid)
     {
-        $data = $this->read($uid);
-        return false !== $data;
+        return shm_has_var($this->memory, $uid);
     }
 
     /**
@@ -92,11 +82,8 @@ class Segment implements CapacityStorageInterface
         if(!is_int($uid) && !is_numeric($uid)) {
             throw new Exception\RuntimeException('Segment type key must integer or numeric.');
         }
-        if($uid*$this->blocSize >= $this->segmentSize) {
-            throw new Exception\RuntimeException('Invalid access bloc. Only ' . floor($this->segmentSize/$this->blocSize) . ' blocs are allowed.');
-        }
         $this->alloc();
-        $str = shmop_read($this->memory, $uid*$this->blocSize, $this->blocSize);
+        $str = shm_get_var($this->memory, $uid);
         $str = trim($str);
         if(!$str) {
             return false;
@@ -114,23 +101,8 @@ class Segment implements CapacityStorageInterface
         if(!is_int($uid) && !is_numeric($uid)) {
             throw new Exception\RuntimeException('Segment type key must integer or numeric.');
         }
-        if(is_object($mixed) && method_exists($mixed, '__toString')) {
-            $mixed = $mixed->__toString();
-        }
-        if(is_int($mixed) || is_float($mixed) || is_bool($mixed)) {
-            $mixed = (string)$mixed;
-        }
-        if(!is_string($mixed)) {
-            $mixed = '';
-        }
-        if($uid*$this->blocSize >= $this->segmentSize) {
-            throw new Exception\RuntimeException('Invalid access bloc. Only ' . floor($this->segmentSize/$this->blocSize) . ' blocs are allowed.');
-        }
         $this->alloc();
-        $limit = $this->getBlocSize();
-        $str = mb_substr($mixed, 0, $limit);
-        $str = str_pad($str, $this->blocSize);
-        return shmop_write($this->memory, $str, $uid*$this->blocSize);
+        return shm_put_var($this->memory, $uid, $mixed);
     }
 
     /**
@@ -142,13 +114,16 @@ class Segment implements CapacityStorageInterface
     {
         if(null === $uid) {
             $this->alloc();
-            return shmop_delete($this->memory);
+            return shm_remove($this->memory);
         }
         if(!is_int($uid) && !is_numeric($uid)) {
             throw new Exception\RuntimeException('Segment type key must integer or numeric.');
         }
         $this->alloc();
-        return shmop_write($this->memory, str_repeat(' ', $this->blocSize), $uid*$this->blocSize);
+        if(!$this->has($uid)) {
+            return false;
+        }
+        return shm_remove_var($this->memory, $uid);
 
     }
 
@@ -161,7 +136,7 @@ class Segment implements CapacityStorageInterface
         if(null === $this->memory) {
             return;
         }
-        shmop_close($this->memory);
+        shm_detach($this->memory);
         $this->memory = null;
     }
 
@@ -172,31 +147,6 @@ class Segment implements CapacityStorageInterface
     public function getSegment()
     {
         return $this->memory;
-    }
-
-    /**
-     * Get bloc size
-     * @return int
-     */
-    public function getBlocSize()
-    {
-        return $this->blocSize;
-    }
-
-    /**
-     * Set bloc size
-     * @param int
-     */
-    public function setBlocSize($size)
-    {
-        if(null !== $this->memory) {
-            throw new Exception\RuntimeException(
-                'You can not change the segment size because memory is already allocated.'
-                . ' Use realloc() function to create new memory segment.'
-            );
-        }
-        $this->blocSize = (integer)$size;
-        return $this;
     }
 
     /**
@@ -229,6 +179,6 @@ class Segment implements CapacityStorageInterface
      */
     public function canAllowBlocsMemory($numBloc)
     {
-        return floor($this->segmentSize/$this->blocSize) >= $numBloc;
+        return $this->segmentSize >= $numBloc;
     }
 }

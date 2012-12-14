@@ -24,6 +24,7 @@ class Session implements CapacityStorageInterface
     {
         if (php_sapi_name() === 'cli') {
             $this->session = new \ArrayObject();
+            return;
         }
         $this->session = new SessionContainer($namespace);
     }
@@ -37,6 +38,17 @@ class Session implements CapacityStorageInterface
     }
 
     /**
+     * Test if has datas with $uid key
+     * @param mixed $uid
+     * @return boolean
+     */
+    public function has($uid)
+    {
+        $this->alloc();
+        return $this->session->offsetExists($uid);
+    }
+
+    /**
      * Read datas with $uid key
      * @param mixed $uid
      * @return mixed
@@ -44,7 +56,7 @@ class Session implements CapacityStorageInterface
     public function read($uid)
     {
         $this->alloc();
-        return $this->session->{$uid};
+        return $this->session->offsetGet($uid);
     }
 
     /**
@@ -55,7 +67,22 @@ class Session implements CapacityStorageInterface
     public function write($uid, $mixed)
     {
         $this->alloc();
-        return $this->session->{$uid} = $mixed;
+        $this->session->offsetSet($uid, $mixed);
+        return true;
+    }
+
+    /**
+     * Clear datas with $uid key
+     * @param mixed $uid
+     * @return void
+     */
+    public function clear($uid = null)
+    {
+        $this->alloc();
+        if($uid) {
+            return $this->session->offsetUnset($uid);
+        }
+        return $this->session->exchangeArray(array());
     }
 
     /**
