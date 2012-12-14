@@ -60,3 +60,5 @@ $manager->write('my-identifier', new MyObject());
 // in other process, you can do
 $object = $manager->read('my-identifier');
 ```
+
+All storages can respond to the functions : read(), write(), has(), clear() with optional identifier & close().
