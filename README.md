@@ -1,7 +1,7 @@
 ZF2 SimpleMemoryShared module
 ============
 
-Version 1.7.0 Created by [Vincent Blanchon](http://developpeur-zend-framework.fr/)
+Version 1.8.0 Created by [Vincent Blanchon](http://developpeur-zend-framework.fr/)
 
 Introduction
 ------------
@@ -10,7 +10,7 @@ ZF2 module SimpleMemoryShared provide a memory shared manager.
 This module can be used alone or with the [ParallelJobs](https://github.com/blanchonvincent/ParallelJobs) module.
 
 You can use this module within yours simply to have a simple memory manager.
-Storage options available are : file, session, segment, bloc, memcached, apc, zendshm, and zenddisk.
+Storage options available are : file, db, session, segment, bloc, memcached, apc, zendshm, and zenddisk.
 
 Memory shared manager usage
 ------------

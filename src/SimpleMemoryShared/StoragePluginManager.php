@@ -18,6 +18,7 @@ class StoragePluginManager extends AbstractPluginManager
      */
     protected $invokableClasses = array(
         'apc'           => 'SimpleMemoryShared\Storage\Apc',
+        'db'            => 'SimpleMemoryShared\Storage\Db',
         'file'          => 'SimpleMemoryShared\Storage\File',
         //'file_ftp'    => 'SimpleMemoryShared\Storage\FileFtp',
         'memcached'     => 'SimpleMemoryShared\Storage\Memcached',
