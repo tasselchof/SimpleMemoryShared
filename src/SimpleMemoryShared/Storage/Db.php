@@ -75,7 +75,8 @@ class Db implements CapacityStorageInterface
         }
         $current = $stmt->current();
         $datas = $current->getArrayCopy();
-        return array_shift($datas);
+        $contents = array_shift($datas);
+        return unserialize($contents);
     }
 
     /**
@@ -86,13 +87,13 @@ class Db implements CapacityStorageInterface
     public function write($uid, $mixed)
     {
         $options = $this->getOptions();
-        $stmt = $this->adapter->query(
+        $this->adapter->query(
             sprintf('INSERT INTO %s (%s, %s) VALUES ("%s", "%s")',
                 $options['table'],
                 $options['column_key'],
                 $options['column_value'],
                 $uid,
-                $mixed
+                $this->adapter->getPlatform()->quoteValue(serialize($mixed))
             ), Adapter::QUERY_MODE_EXECUTE
         );
         return true;

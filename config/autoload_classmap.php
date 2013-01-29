@@ -4,6 +4,7 @@ return array(
     'SimpleMemoryShared\MemorySharedManager' => __DIR__ . '/../src/SimpleMemoryShared/MemorySharedManager.php',
     'SimpleMemoryShared\StoragePluginManager' => __DIR__ . '/../src/SimpleMemoryShared/StoragePluginManager.php',
     'SimpleMemoryShared\Storage\Apc' => __DIR__ . '/../src/SimpleMemoryShared/Storage/Apc.php',
+    'SimpleMemoryShared\Storage\Db' => __DIR__ . '/../src/SimpleMemoryShared/Storage/Db.php',
     'SimpleMemoryShared\Storage\File' => __DIR__ . '/../src/SimpleMemoryShared/Storage/File.php',
     'SimpleMemoryShared\Storage\Memcached' => __DIR__ . '/../src/SimpleMemoryShared/Storage/Memcached.php',
     'SimpleMemoryShared\Storage\Segment' => __DIR__ . '/../src/SimpleMemoryShared/Storage/Segment.php',
