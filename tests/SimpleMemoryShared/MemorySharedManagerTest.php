@@ -7,6 +7,7 @@
 namespace SimpleMemorySharedTest;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use Zend\Db\Adapter\Adapter;
 use Zend\ServiceManager;
 
 class MemorySharedManagerTest extends TestCase
@@ -117,7 +118,7 @@ class MemorySharedManagerTest extends TestCase
         $this->assertEquals($data, 'foo');
     }
 
-    public function testCanCreateForkWithSegmentStorage()
+    public function testCanTestSegmentStorageAllocation()
     {
         $manager = $this->sm->get('MemorySharedManager');
         $storage = $manager->getStoragePluginManager()->get('segment', array('identifier' => 'E'));
@@ -130,5 +131,25 @@ class MemorySharedManagerTest extends TestCase
         $this->assertEquals(false, $allowed);
         $allowed = $storage->canAllowBlocsMemory(floor($segmentSize/$blocSize));
         $this->assertEquals(true, $allowed);
+    }
+
+    public function testCanBuildDbWithConfig()
+    {
+        $config = include __DIR__ . '/../config.local.php';
+        $adapter = new Adapter($config['db']);
+        $config['db_storage']['adapter'] = $adapter;
+
+        $manager = $this->sm->get('MemorySharedManager');
+        $storage = $manager->getStoragePluginManager()->get('db', $config['db_storage']);
+        $this->assertEquals(get_class($storage), 'SimpleMemoryShared\Storage\Db');
+    }
+
+    public function testCanNotBuildDbWithoutAdapter()
+    {
+        $config = include __DIR__ . '/../config.local.php';
+
+        $manager = $this->sm->get('MemorySharedManager');
+        $this->setExpectedException('Zend\Stdlib\Exception\InvalidArgumentException');
+        $storage = $manager->getStoragePluginManager()->get('db', $config['db_storage']);
     }
 }

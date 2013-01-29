@@ -14,7 +14,8 @@ class DbTest extends TestCase
     {
         $config = include __DIR__ . '/../../config.local.php';
         $adapter = new Adapter($config['db']);
-        $this->storage = new Storage\Db($adapter, $config['db_storage']);
+        $config['db_storage']['adapter'] = $adapter;
+        $this->storage = new Storage\Db($config['db_storage']);
     }
 
     public function testCanWriteAndRead()

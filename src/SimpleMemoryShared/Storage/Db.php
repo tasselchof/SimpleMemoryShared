@@ -26,12 +26,10 @@ class Db implements CapacityStorageInterface
 
     /**
      * Db storage constructor, need db adapter and db options
-     * @param Adapter $adapter
      * @param array $options
      */
-    public function __construct(Adapter $adapter, array $options = array())
+    public function __construct(array $options = array())
     {
-        $this->adapter = $adapter;
         if($options) {
             $this->setOptions($options);
         }
@@ -165,14 +163,21 @@ class Db implements CapacityStorageInterface
     protected function setOptions(array $options)
     {
         if(
+            !array_key_exists('adapter', $options) ||
             !array_key_exists('table', $options) ||
             !array_key_exists('column_key', $options) ||
             !array_key_exists('column_value', $options)
         ) {
             throw new Exception\InvalidArgumentException(
-                'Db adapter options must be defined "table", "column_key" and "column_value" keys.'
+                'Db adapter options must be defined "adapter", "table", "column_key" and "column_value" keys.'
             );
         }
+        if(!$options['adapter'] instanceof Adapter) {
+            throw new Exception\InvalidArgumentException(
+                'Db adapter must be an instance of Zend\Db\Adapter\Adapter.'
+            );
+        }
+        $this->adapter = $options['adapter'];
         $options['table'] = $this->adapter->getPlatform()->quoteIdentifier($options['table']);
         $options['column_key'] = $this->adapter->getPlatform()->quoteIdentifier($options['column_key']);
         $options['column_value'] = $this->adapter->getPlatform()->quoteIdentifier($options['column_value']);
