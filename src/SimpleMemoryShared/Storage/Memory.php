@@ -43,7 +43,10 @@ class Memory implements StorageInterface, Feature\CapacityStorageInterface
      */
     public function read($uid)
     {
-        return $this->session->offsetGet($uid);
+        if(!$this->has($uid)) {
+            return false;
+        }
+        return $this->data[$uid];
     }
 
     /**
@@ -53,7 +56,7 @@ class Memory implements StorageInterface, Feature\CapacityStorageInterface
      */
     public function write($uid, $mixed)
     {
-        $this->session->offsetSet($uid, $mixed);
+        $this->data[$uid] = $mixed;
         return true;
     }
 
@@ -65,9 +68,10 @@ class Memory implements StorageInterface, Feature\CapacityStorageInterface
     public function clear($uid = null)
     {
         if($uid) {
-            return $this->session->offsetUnset($uid);
+            unset($this->data[$uid]);
+            return;
         }
-        return $this->session->exchangeArray(array());
+        $this->data[$uid] = array();
     }
 
     /**

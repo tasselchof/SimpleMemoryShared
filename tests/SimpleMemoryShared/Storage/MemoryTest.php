@@ -1,33 +1,25 @@
 <?php
 
+/**
+ * sudo memcached -d -u nobody -m 128 127.0.0.1 -p 11211 // to run memcached for tests
+ */
+
 namespace SimpleMemorySharedTest\Storage;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use SimpleMemoryShared\Storage;
 
-class MemachedTest extends TestCase
+class MemoryTest extends TestCase
 {
     protected $storage;
 
     public function setUp()
     {
-        if (!extension_loaded('memcache')) {
-            $this->markTestSkipped('Memcache extension must be loaded.');
-        }
-        $this->storage = new Storage\Memcached(
-            array(
-                'host' => '127.0.0.1',
-                'port' => 11211,
-            )
-        );
+        $this->storage = new Storage\Session();
     }
 
     public function tearDown()
     {
-        if(!$this->storage) {
-            return;
-        }
-        $this->storage->clear();
         $this->storage->close();
     }
     
@@ -41,7 +33,9 @@ class MemachedTest extends TestCase
         $has = $this->storage->has('custom-key');
         $this->assertEquals($has, false);
 
-        $this->storage->write('custom-key', 'sample');
+        $success = $this->storage->write('custom-key', 'sample');
+        $this->assertEquals($success, true);
+
         $datas = $this->storage->read('custom-key');
         $this->assertEquals($datas, 'sample');
 
@@ -60,7 +54,7 @@ class MemachedTest extends TestCase
         $this->storage->write('second', 'sample');
 
         $has = $this->storage->has('first');
-        $this->assertEquals($has, true);
+        $this->assertTrue($has, true);
         $has = $this->storage->has('second');
         $this->assertEquals($has, true);
 

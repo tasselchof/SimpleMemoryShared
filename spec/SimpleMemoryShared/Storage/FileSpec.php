@@ -18,11 +18,17 @@ class FileSpec extends ObjectBehavior
 
     function it_sets_value()
     {
-        $this->write('cutom-key', 'value')->willReturn(true);
+        $len = strlen(serialize('value'));
+        $this->write('cutom-key', 'value')->shouldReturn($len);
     }
     
     function it_gets_value()
     {
-        $this->read('cutom-key')->willReturn(true);
+        $this->read('cutom-key')->shouldReturn('value');
+    }
+    
+    function it_clears_value()
+    {
+        $this->clear('cutom-key')->shouldReturn(true);
     }
 }
