@@ -1,7 +1,7 @@
 {
     "name": "blanchonvincent/simple-memory-shared",
-    "description": "ZF2 module v2.0.0 - Provide a manager to share simply memory with storage options : file, session, segment, memcached, apc, zendshm and zenddisk. - This module can be used with my ForkManager",
-    "version": "2.0.0",
+    "description": "ZF2 module v2.1.0 - Provide a manager to share simply memory with storage options : file, session, segment, memcached, apc, zendshm and zenddisk. - This module can be used with my ForkManager",
+    "version": "2.1.0",
     "type": "module",
     "license": "MIT",
     "tags": [
@@ -20,6 +20,9 @@
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.*"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "2.0.*@dev"
     },
     "autoload": {
     	"psr-0": {

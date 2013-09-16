@@ -1,5 +1,5 @@
 #! /bin/sh
 
-clear
+reset
 rm -rf ./SimpleMemoryShared/Storage/tmp/*
 phpunit --bootstrap bootstrap.php ./SimpleMemoryShared/

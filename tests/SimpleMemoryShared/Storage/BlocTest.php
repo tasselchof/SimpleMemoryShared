@@ -22,6 +22,11 @@ class BlocTest extends TestCase
     {
         $this->storage->close();
     }
+    
+    public function testCannotHasWithoutAlloc()
+    {
+        $this->assertFalse($this->storage->has(1));
+    }
 
     public function testCanWriteAndRead()
     {

@@ -7,34 +7,46 @@
 
 namespace SimpleMemoryShared\Storage;
 
-use SimpleMemoryShared\Storage\Exception\RuntimeException;
 use Zend\Session\Container as SessionContainer;
 
 /**
  * Storage adapter using the php session shared memory store
  */
-class Session implements CapacityStorageInterface
+class Session implements StorageInterface, Feature\CapacityStorageInterface
 {
+    /**
+     * Session object
+     * @var \ArrayObject|SessionContainer
+     */
     protected $session;
+    
+    /**
+     * Session namespace
+     * @var string
+     */
+    protected $namespace;
 
     /**
      * Construct storage
      */
     public function __construct($namespace = 'simple_memory_shared')
     {
-        if (php_sapi_name() === 'cli') {
-            $this->session = new \ArrayObject();
-            return;
-        }
-        $this->session = new SessionContainer($namespace);
+        $this->namespace = $namespace;
     }
 
     /**
      * Memory alloc
      */
-    public function alloc()
+    protected function alloc()
     {
-        return;
+        if(null !== $this->session) {
+            return;
+        }
+        if (php_sapi_name() === 'cli') {
+            $this->session = new \ArrayObject();
+            return;
+        }
+        $this->session = new SessionContainer($this->namespace);
     }
 
     /**
@@ -44,7 +56,9 @@ class Session implements CapacityStorageInterface
      */
     public function has($uid)
     {
-        $this->alloc();
+        if(null === $this->session) {
+            return false;
+        }
         return $this->session->offsetExists($uid);
     }
 

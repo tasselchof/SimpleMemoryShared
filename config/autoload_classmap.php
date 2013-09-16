@@ -7,6 +7,7 @@ return array(
     'SimpleMemoryShared\Storage\Db' => __DIR__ . '/../src/SimpleMemoryShared/Storage/Db.php',
     'SimpleMemoryShared\Storage\File' => __DIR__ . '/../src/SimpleMemoryShared/Storage/File.php',
     'SimpleMemoryShared\Storage\Memcached' => __DIR__ . '/../src/SimpleMemoryShared/Storage/Memcached.php',
+    'SimpleMemoryShared\Storage\Memory' => __DIR__ . '/../src/SimpleMemoryShared/Storage/Memory.php',
     'SimpleMemoryShared\Storage\Segment' => __DIR__ . '/../src/SimpleMemoryShared/Storage/Segment.php',
     'SimpleMemoryShared\Storage\Session' => __DIR__ . '/../src/SimpleMemoryShared/Storage/Session.php',
     'SimpleMemoryShared\Storage\ZendShmCache' => __DIR__ . '/../src/SimpleMemoryShared/Storage/ZendShmCache.php',

@@ -7,7 +7,7 @@
 
 namespace SimpleMemoryShared\Storage;
 
-class Bloc implements CapacityStorageInterface
+class Bloc implements StorageInterface, Feature\CapacityStorageInterface
 {
     /**
      * identifier
@@ -54,7 +54,7 @@ class Bloc implements CapacityStorageInterface
     /**
      * Memory alloc
      */
-    public function alloc()
+    protected function alloc()
     {
         if(null !== $this->memory) {
             return;
@@ -69,6 +69,9 @@ class Bloc implements CapacityStorageInterface
      */
     public function has($uid)
     {
+        if(null === $this->memory) {
+            return false;
+        }
         return shm_has_var($this->memory, $uid);
     }
 

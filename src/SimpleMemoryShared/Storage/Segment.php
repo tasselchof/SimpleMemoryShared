@@ -7,7 +7,7 @@
 
 namespace SimpleMemoryShared\Storage;
 
-class Segment implements CapacityStorageInterface
+class Segment implements StorageInterface, Feature\CapacityStorageInterface
 {
     /**
      * identifier
@@ -63,7 +63,7 @@ class Segment implements CapacityStorageInterface
     /**
      * Memory alloc
      */
-    public function alloc()
+    protected function alloc()
     {
         if(null !== $this->memory) {
             return;
@@ -78,6 +78,9 @@ class Segment implements CapacityStorageInterface
      */
     public function has($uid)
     {
+        if(null === $this->memory) {
+            return false;
+        }
         $data = $this->read($uid);
         return false !== $data;
     }

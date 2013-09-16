@@ -22,6 +22,11 @@ class SessionTest extends TestCase
     {
         $this->storage->close();
     }
+    
+    public function testCannotHasWithoutAlloc()
+    {
+        $this->assertFalse($this->storage->has('custom-key'));
+    }
 
     public function testCanWriteAndRead()
     {
@@ -49,7 +54,7 @@ class SessionTest extends TestCase
         $this->storage->write('second', 'sample');
 
         $has = $this->storage->has('first');
-        $this->assertEquals($has, true);
+        $this->assertTrue($has, true);
         $has = $this->storage->has('second');
         $this->assertEquals($has, true);
 

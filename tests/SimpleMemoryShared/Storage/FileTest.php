@@ -15,7 +15,7 @@ class FileTest extends TestCase
 
     public function setUp()
     {
-        $this->storage = new Storage\File(array('dir' => __DIR__ . '/tmp'));
+        $this->storage = new Storage\File(array('dir' => __DIR__ . '/../../tmp'));
     }
 
     public function testCanWriteAndRead()

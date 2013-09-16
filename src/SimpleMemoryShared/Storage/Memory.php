@@ -7,24 +7,23 @@
 
 namespace SimpleMemoryShared\Storage;
 
-use SimpleMemoryShared\Storage\Exception\RuntimeException;
-
 /**
- * Storage adapter using the Zend Data Cache disk store
+ * Storage adapter using the php array
  */
-class ZendDiskCache implements StorageInterface, Feature\CapacityStorageInterface
+class Memory implements StorageInterface, Feature\CapacityStorageInterface
 {
+    /**
+     * Data cached
+     * @var array
+     */
+    protected $data;
+
     /**
      * Construct storage
      */
     public function __construct()
     {
-        if (php_sapi_name() === 'cli') {
-            throw new RuntimeException('ZendDiskCache is not available from the command line');
-        }
-        if (!function_exists('zend_disk_cache_store') || !ini_get('zend_datacache.enable')) {
-            throw new RuntimeException('Zend Data Cache extension must be loaded and enabled.');
-        }
+        $this->data = array();
     }
 
     /**
@@ -34,8 +33,7 @@ class ZendDiskCache implements StorageInterface, Feature\CapacityStorageInterfac
      */
     public function has($uid)
     {
-        $data = $this->read($uid);
-        return false !== $data;
+        return isset($this->data[$uid]);
     }
 
     /**
@@ -45,7 +43,7 @@ class ZendDiskCache implements StorageInterface, Feature\CapacityStorageInterfac
      */
     public function read($uid)
     {
-        return zend_disk_cache_fetch($uid);
+        return $this->session->offsetGet($uid);
     }
 
     /**
@@ -55,7 +53,8 @@ class ZendDiskCache implements StorageInterface, Feature\CapacityStorageInterfac
      */
     public function write($uid, $mixed)
     {
-        return zend_disk_cache_store($uid, $mixed);
+        $this->session->offsetSet($uid, $mixed);
+        return true;
     }
 
     /**
@@ -66,9 +65,9 @@ class ZendDiskCache implements StorageInterface, Feature\CapacityStorageInterfac
     public function clear($uid = null)
     {
         if($uid) {
-            return zend_disk_cache_delete($uid);
+            return $this->session->offsetUnset($uid);
         }
-        return zend_disk_cache_clear();
+        return $this->session->exchangeArray(array());
     }
 
     /**

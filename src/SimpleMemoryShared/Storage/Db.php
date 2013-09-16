@@ -10,7 +10,7 @@ namespace SimpleMemoryShared\Storage;
 use Zend\Db\Adapter\Adapter;
 use Zend\Stdlib\Exception;
 
-class Db implements CapacityStorageInterface
+class Db implements StorageInterface, Feature\CapacityStorageInterface
 {
     /**
      * Db adapater
@@ -88,7 +88,7 @@ class Db implements CapacityStorageInterface
     {
         $options = $this->getOptions();
         $this->adapter->query(
-            sprintf('INSERT INTO %s (%s, %s) VALUES ("%s", "%s")',
+            sprintf('INSERT INTO %s (%s, %s) VALUES ("%s", %s)',
                 $options['table'],
                 $options['column_key'],
                 $options['column_value'],

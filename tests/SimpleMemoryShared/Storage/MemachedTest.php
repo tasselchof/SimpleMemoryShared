@@ -15,6 +15,9 @@ class MemachedTest extends TestCase
 
     public function setUp()
     {
+        if (!extension_loaded('memcache')) {
+            $this->markTestSkipped('Memcache extension must be loaded.');
+        }
         $this->storage = new Storage\Memcached(
             array(
                 'host' => '127.0.0.1',
@@ -25,8 +28,16 @@ class MemachedTest extends TestCase
 
     public function tearDown()
     {
+        if(!$this->storage) {
+            return;
+        }
         $this->storage->clear();
         $this->storage->close();
+    }
+    
+    public function testCannotHasWithoutAlloc()
+    {
+        $this->assertFalse($this->storage->has('custom-key'));
     }
 
     public function testCanWriteAndRead()

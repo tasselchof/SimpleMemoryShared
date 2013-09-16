@@ -11,6 +11,9 @@ class ApcTest extends TestCase
 
     public function setUp()
     {
+        if (!extension_loaded('apc') || !ini_get('apc.enabled')) {
+            $this->markTestSkipped('APC extension must be loaded.');
+        }
         $this->storage = new Storage\Apc();
     }
 

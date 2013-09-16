@@ -48,9 +48,6 @@ class MemorySharedManagerTest extends TestCase
         $manager->setStorage('segment');
         $storage = $manager->getStorage();
         $this->assertEquals(get_class($storage), 'SimpleMemoryShared\Storage\Segment');
-        $manager->setStorage('memcached');
-        $storage = $manager->getStorage();
-        $this->assertEquals(get_class($storage), 'SimpleMemoryShared\Storage\Memcached');
     }
     /*
     public function testCannotSetStorageWithNickname()
@@ -69,8 +66,6 @@ class MemorySharedManagerTest extends TestCase
         $this->assertEquals(get_class($storage), 'SimpleMemoryShared\Storage\File');
         $storage = $manager->getStoragePluginManager()->get('segment');
         $this->assertEquals(get_class($storage), 'SimpleMemoryShared\Storage\Segment');
-        $storage = $manager->getStoragePluginManager()->get('memcached');
-        $this->assertEquals(get_class($storage), 'SimpleMemoryShared\Storage\Memcached');
     }
 
     public function testCannotGetUnknowPluginWithStorageManager()
@@ -82,6 +77,9 @@ class MemorySharedManagerTest extends TestCase
 
     public function testCanCreateMemcachedStorageWithCustomConfig()
     {
+        if (!extension_loaded('memcache')) {
+            $this->markTestSkipped('Memcache extension must be loaded.');
+        }
         $manager = $this->sm->get('MemorySharedManager');
         $storage = $manager->getStoragePluginManager()->get('memcached', array('host' => '127.0.0.1', 'port' => 11211));
         $this->assertEquals(get_class($storage), 'SimpleMemoryShared\Storage\Memcached');
@@ -93,11 +91,12 @@ class MemorySharedManagerTest extends TestCase
     public function testCanCreateFileStorageWithCustomConfig()
     {
         $manager = $this->sm->get('MemorySharedManager');
-        $storage = $manager->getStoragePluginManager()->get('file', array('dir' => __DIR__ . '/tmp'));
+        $storage = $manager->getStoragePluginManager()->get('file', array('dir' => __DIR__ . '/../tmp'));
         $this->assertEquals(get_class($storage), 'SimpleMemoryShared\Storage\File');
         $storage->write(__FUNCTION__, 'foo');
         $data = $storage->read(__FUNCTION__, 'foo');
         $this->assertEquals($data, 'foo');
+        $storage->clear(__FUNCTION__);
     }
 
     public function testCanCreateSegmentStorageWithCustomConfig()

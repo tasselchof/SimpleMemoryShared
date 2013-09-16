@@ -9,7 +9,7 @@ namespace SimpleMemoryShared\Storage;
 
 use Zend\Stdlib\Glob;
 
-class File implements CapacityStorageInterface
+class File implements StorageInterface, Feature\CapacityStorageInterface
 {
     /**
      * Directory storage

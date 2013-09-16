@@ -12,7 +12,7 @@ use SimpleMemoryShared\Storage\Exception\RuntimeException;
 /**
  * Storage adapter using the Zend Data Cache shared memory store
  */
-class ZendShmCache implements CapacityStorageInterface
+class ZendShmCache implements StorageInterface, Feature\CapacityStorageInterface
 {
     /**
      * Construct storage
@@ -25,14 +25,6 @@ class ZendShmCache implements CapacityStorageInterface
         if (!function_exists('zend_shm_cache_store') || !ini_get('zend_datacache.enable')) {
             throw new RuntimeException('Zend Data Cache extension must be loaded and enabled.');
         }
-    }
-
-    /**
-     * Memory alloc
-     */
-    public function alloc()
-    {
-        return;
     }
 
     /**
@@ -53,7 +45,6 @@ class ZendShmCache implements CapacityStorageInterface
      */
     public function read($uid)
     {
-        $this->alloc();
         return zend_shm_cache_fetch($uid);
     }
 
@@ -64,7 +55,6 @@ class ZendShmCache implements CapacityStorageInterface
      */
     public function write($uid, $mixed)
     {
-        $this->alloc();
         return zend_shm_cache_store($uid, $mixed);
     }
 
@@ -75,7 +65,6 @@ class ZendShmCache implements CapacityStorageInterface
      */
     public function clear($uid = null)
     {
-        $this->alloc();
         if($uid) {
             return zend_shm_cache_delete($uid);
         }

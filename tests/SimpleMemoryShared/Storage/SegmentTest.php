@@ -23,6 +23,11 @@ class SegmentTest extends TestCase
         $this->storage->close();
     }
 
+    public function testCannotHasWithoutAlloc()
+    {
+        $this->assertFalse($this->storage->has(3));
+    }
+    
     public function testCanWriteAndRead()
     {
         $this->storage->clear(3);

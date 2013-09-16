@@ -5,9 +5,9 @@
  * @copyright Copyright (c) 2012 Blanchon Vincent - France (http://developpeur-zend-framework.fr - blanchon.vincent@gmail.com)
  */
 
-namespace SimpleMemoryShared\Storage;
+namespace SimpleMemoryShared\Storage\Feature;
 
-interface CapacityStorageInterface extends StorageInterface
+interface CapacityStorageInterface
 {
     /**
      * Get max bloc allow

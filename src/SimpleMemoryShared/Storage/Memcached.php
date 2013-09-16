@@ -9,7 +9,7 @@ namespace SimpleMemoryShared\Storage;
 
 use SimpleMemoryShared\Storage\Exception\RuntimeException;
 
-class Memcached implements CapacityStorageInterface
+class Memcached implements StorageInterface, Feature\CapacityStorageInterface
 {
     /**
      * Memcached instance
@@ -43,7 +43,7 @@ class Memcached implements CapacityStorageInterface
     /**
      * Memory alloc
      */
-    public function alloc()
+    protected function alloc()
     {
         if(null !== $this->memcached) {
             return;
@@ -62,6 +62,9 @@ class Memcached implements CapacityStorageInterface
      */
     public function has($uid)
     {
+        if(null === $this->memcached) {
+            return false;
+        }
         $data = $this->read($uid);
         return false !== $data;
     }

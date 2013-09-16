@@ -1,7 +1,7 @@
 ZF2 SimpleMemoryShared module
 ============
 
-Version 2.0.0 Created by [Vincent Blanchon](http://developpeur-zend-framework.fr/)
+Version 2.1.0 Created by [Vincent Blanchon](http://developpeur-zend-framework.fr/)
 
 Introduction
 ------------
